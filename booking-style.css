@@ -1,0 +1,49 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Custom Input Styling */
+.custom-input {
+    background-color: #FAFAFA;
+    border: 1px solid #e5e7eb;
+    color: #1a1a1a;
+    border-radius: 0.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.custom-input:focus {
+    background-color: #ffffff;
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    outline: none;
+}
+
+.custom-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Floating Label Animation */
+.floating-label {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    transform: translateY(0);
+}
+
+/* When input focused, move label up */
+.group:focus-within ~ .floating-label {
+    transform: translateY(-1.5rem);
+    font-size: 0.75rem;
+    color: #D4AF37;
+}
+
+/* Hide scrollbar for list */
+.hide-scroll::-webkit-scrollbar {
+    display: none;
+}

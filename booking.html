@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Stay | Red Lotus Bungalow</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              lotusRed: '#9B1B30',
+              lotusDark: '#6D1222',
+              gold: '#D4AF37',
+              goldDark: '#AA8C2C',
+              cream: '#FAFAFA',
+              richBlack: '#0F0F0F',
+              whatsapp: '#25D366'
+            },
+            fontFamily: {
+              kugile: ['Italiana', 'serif'],
+              body: ['Montserrat', 'sans-serif'],
+            },
+            boxShadow: {
+                'gold-glow': '0 0 15px rgba(212, 175, 55, 0.3)',
+            }
+          },
+        },
+      }
+    </script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom CSS -->
+    <style>
+        .floating-label {
+            font-size: 0.75rem;
+            color: #9B1B30;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .custom-input {
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+        .custom-input:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            outline: none;
+        }
+        /* Hide scrollbar for list */
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center py-12 px-4">
+
+    <div class="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+        
+        <!-- LEFT SIDE: IMAGE & VISUALS -->
+        <div class="w-full md:w-2/5 bg-lotusRed relative h-[500px] md:h-auto flex flex-col justify-center items-center p-8 text-white">
+            
+            <!-- Decorative Background Pattern -->
+            <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-black/40 to-black/70 z-0"></div>
+
+            <!-- Content -->
+            <div class="relative z-10 text-center">
+                <h2 class="text-4xl font-kugile font-bold mb-2">Book Your Sanctuary</h2>
+                <p class="text-lg font-light opacity-90 mb-8 max-w-sm mx-auto">
+                    Experience the magic of the mist.
+                </p>
+                
+                <!-- Image Card -->
+                <div class="relative rounded-xl overflow-hidden shadow-gold max-w-sm mx-auto border-2 border-white/20">
+                    <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=2670&auto=format&fit=crop" alt="Room" class="w-full h-64 object-cover" />
+                    <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                        <i data-lucide="heart" class="text-white w-12 h-12 fill-current"></i>
+                    </div>
+                </div>
+
+                <!-- Why Book With Us List -->
+                <div class="mt-8 text-left space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-gold shrink-0">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">Best Price Guarantee</h4>
+                            <p class="text-sm text-gray-200">No hidden fees, direct booking.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-gold shrink-0">
+                            <i data-lucide="coffee" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">Instant Confirmation</h4>
+                            <p class="text-sm text-gray-200">WhatsApp message sent instantly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: FORM -->
+        <div class="w-full md:w-3/5 p-8 md:p-12 bg-white flex flex-col justify-center">
+            <div class="w-full max-w-md">
+                
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl md:text-4xl font-kugile text-richBlack mb-2">Reservation Details</h1>
+                    <p class="text-gray-500 mb-8">Fill in the form below to secure your spot at Red Lotus.</p>
+                </div>
+
+                <form id="bookingForm" class="space-y-6">
+                    
+                    <!-- Name Field -->
+                    <div class="relative group">
+                        <input type="text" id="fullName" name="name" required placeholder="Full Name" class="custom-input w-full pl-12 pr-4 py-4 rounded-lg bg-gray-50 text-gray-800 focus:bg-white placeholder-gray-400" />
+                        <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none group-focus-within:text-gold transition-colors"></i>
+                        <label class="floating-label group-focus-within:-translate-y-8 text-xs uppercase tracking-widest">Guest Name</label>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="relative group">
+                        <input type="email" id="email" name="email" required placeholder="Email Address" class="custom-input w-full pl-12 pr-4 py-4 rounded-lg bg-gray-50 text-gray-800 focus:bg-white placeholder-gray-400" />
+                        <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none group-focus-within:text-gold transition-colors"></i>
+                        <label class="floating-label group-focus-within:-translate-y-8 text-xs uppercase tracking-widest">Email Address</label>
+                    </div>
+
+                    <!-- Phone Field -->
+                    <div class="relative group">
+                        <input type="tel" id="phone" name="phone" required placeholder="Phone Number" class="custom-input w-full pl-12 pr-4 py-4 rounded-lg bg-gray-50 text-gray-800 focus:bg-white placeholder-gray-400" />
+                        <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none group-focus-within:text-gold transition-colors"></i>
+                        <label class="floating-label group-focus-within:-translate-y-8 text-xs uppercase tracking-widest">Phone Number</label>
+                    </div>
+
+                    <!-- Dates Row -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Check-in</label>
+                            <input type="date" id="checkIn" name="check_in" required class="w-full p-4 rounded-lg bg-gray-50 text-gray-800 focus:bg-white custom-input cursor-pointer hover:bg-gray-100">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Check-out</label>
+                            <input type="date" id="checkOut" name="check_out" required class="w-full p-4 rounded-lg bg-gray-50 text-gray-800 focus:bg-white custom-input cursor-pointer hover:bg-gray-100">
+                        </div>
+                    </div>
+
+                    <!-- Room & Guests Row -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative group">
+                            <select id="roomSelect" name="room_type" class="w-full p-4 rounded-lg bg-gray-50 text-gray-800 focus:bg-white custom-input appearance-none cursor-pointer">
+                                <option value="Garden Suite">Garden Suite</option>
+                                <option value="Royal Loft">Royal Loft</option>
+                                <option value="Grand Villa">Grand Villa</option>
+                            </select>
+                            <i data-lucide="bed-double" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none group-focus-within:text-gold transition-colors"></i>
+                            <label class="floating-label group-focus-within:-translate-y-8 text-xs uppercase tracking-widest">Select Room</label>
+                        </div>
+                        <div class="relative group">
+                            <select id="guests" name="guests" class="w-full p-4 rounded-lg bg-gray-50 text-gray-800 focus:bg-white custom-input appearance-none cursor-pointer">
+                                <option value="1">1 Guest</option>
+                                <option value="2">2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4+">4+ Guests</option>
+                            </select>
+                            <i data-lucide="users" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none group-focus-within:text-gold transition-colors"></i>
+                            <label class="floating-label group-focus-within:-translate-y-8 text-xs uppercase tracking-widest">Guests</label>
+                        </div>
+                    </div>
+
+                    <!-- Message Area -->
+                    <div class="relative group">
+                        <textarea id="message" name="message" rows="4" placeholder="Special Requests or Dietary Needs..." class="custom-input w-full pl-12 pr-4 py-4 rounded-lg bg-gray-50 text-gray-800 focus:bg-white resize-none"></textarea>
+                        <i data-lucide="message-square" class="absolute left-4 top-4 text-gray-400 pointer-events-none group-focus-within:text-gold transition-colors"></i>
+                        <label class="floating-label group-focus-within:-translate-y-8 text-xs uppercase tracking-widest">Requests</label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-lotusRed to-lotusDark text-white py-4 rounded-lg font-bold uppercase tracking-widest shadow-gold-glow hover:shadow-gold-glow hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-3">
+                        <span id="btnText">Confirm Booking</span>
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Back Link -->
+                    <div class="text-center mt-6">
+                        <a href="/templates/index.html" class="text-gray-500 hover:text-lotusRed font-semibold transition-colors text-sm flex items-center justify-center gap-2">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            Back to Home
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <!-- Initialize Icons -->
+    <script>lucide.createIcons();</script>
+    <!-- Link to JS -->
+    <script src="/static/booking-script.js"></script>
+</body>
+</html>

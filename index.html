@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Lotus Bungalow | The Perfect Getaway</title>
+    
+    <!-- Fonts: Italiana & Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              lotusRed: '#9B1B30',
+              lotusDark: '#6D1222',
+              leafGreen: '#2D6A4F',
+              cream: '#FAFAFA',
+              gold: '#D4AF37',
+              goldDark: '#AA8C2C',
+              darkText: '#1A1A1A',
+              richBlack: '#0F0F0F',
+            },
+            fontFamily: {
+              kugile: ['Italiana', 'serif'],
+              body: ['Montserrat', 'sans-serif'],
+            },
+            boxShadow: {
+                'gold': '0 4px 20px -2px rgba(212, 175, 55, 0.25)',
+                'glow': '0 0 15px rgba(212, 175, 55, 0.3)',
+            },
+            animation: {
+                'fade-in-up': 'fadeInUp 1s ease-out forwards',
+                'scale-in': 'scaleIn 0.3s ease-out forwards',
+            },
+            keyframes: {
+                fadeInUp: {
+                    '0%': { opacity: '0', transform: 'translateY(20px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
+                scaleIn: {
+                    '0%': { opacity: '0', transform: 'scale(0.95)' },
+                    '100%': { opacity: '1', transform: 'scale(1)' },
+                }
+            }
+          },
+        },
+      }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-cream text-darkText antialiased font-body selection:bg-lotusRed selection:text-white">
+    
+    <!-- MODAL FOR ROOMS -->
+    <div id="roomDetailsModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-richBlack/90 backdrop-blur-md transition-opacity" onclick="closeDetailsModal()"></div>
+        
+        <!-- Main Modal Content -->
+        <div class="relative bg-white w-full max-w-6xl rounded-none shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] animate-scale-in">
+            
+            <!-- LEFT COLUMN: IMAGE & BASIC INFO -->
+            <div class="w-full md:w-2/5 h-[300px] md:h-auto relative bg-black">
+                <!-- Background Image -->
+                <img id="modalRoomImage" src="" class="w-full h-full object-cover transition-opacity duration-500" alt="Room View" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                
+                <!-- Title & Price Header -->
+                <div class="absolute bottom-0 w-full p-6 md:p-8 text-white">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-end gap-2">
+                        <h2 id="modalTitle" class="font-kugile text-4xl md:text-5xl font-bold leading-none">Room Title</h2>
+                        <div class="flex items-center gap-2 text-gold font-medium">
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <span id="modalPrice" class="text-xl md:text-2xl font-bold tracking-wide">Price</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: FEATURES & FORM -->
+            <div class="w-full md:w-3/5 p-6 md:p-12 flex flex-col overflow-y-auto bg-cream">
+                
+                <!-- Header & Close Button -->
+                <div class="flex justify-between items-start mb-6 border-b border-gray-200 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-richBlack">Room Details</h2>
+                    <button onclick="closeDetailsModal()" class="text-gray-400 hover:text-lotusRed font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-colors">
+                        Close
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </button>
+                </div>
+
+                <!-- Description -->
+                <p id="modalDesc" class="text-gray-600 leading-relaxed font-light text-sm md:text-base mb-6 text-justify">
+                    Description text goes here.
+                </p>
+
+                <!-- Room Features List -->
+                <h4 class="text-sm font-bold text-richBlack uppercase tracking-widest mb-4">Amenities</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8" id="modalFeatures">
+                    <!-- Features injected by JS -->
+                </ul>
+
+                <!-- Photo Gallery -->
+                <h4 class="text-sm font-bold text-richBlack uppercase tracking-widest mb-4">Gallery</h4>
+                <div class="grid grid-cols-3 gap-3 mb-8" id="modalGallery">
+                    <!-- Images injected by JS -->
+                </div>
+
+                <!-- Booking Form -->
+                <div class="mt-auto pt-8 border-t border-gray-200">
+                    <h3 class="font-kugile text-xl mb-4 text-lotusRed">Book This Room</h3>
+                    <form id="detailsBookingForm" class="space-y-4">
+                        <input type="hidden" id="detailsRoomType" name="room_type">
+                        <div class="space-y-3">
+                            <input required id="bookingName" name="name" placeholder="Full Name" class="w-full bg-white border border-gray-200 rounded p-3 focus:border-gold focus:ring-2 focus:ring-gold/20 outline-none text-sm">
+                            <input required type="email" id="bookingEmail" name="email" placeholder="Email Address" class="w-full bg-white border border-gray-200 rounded p-3 focus:border-gold focus:ring-2 focus:ring-gold/20 outline-none text-sm">
+                            <input required type="tel" id="bookingPhone" name="phone" placeholder="Phone Number" class="w-full bg-white border border-gray-200 rounded p-3 focus:border-gold focus:ring-2 focus:ring-gold/20 outline-none text-sm">
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-lotusRed to-lotusDark text-white py-4 rounded-lg font-bold uppercase tracking-widest hover:shadow-xl hover:scale-[1.01] transition-all duration-300 flex items-center justify-center gap-2 text-sm">
+                            <span id="btnText">Confirm Booking</span>
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <header id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-4 md:py-6">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-4 group cursor-pointer">
+                <img id="navLogo" src="https://images.unsplash.com/photo-1552252873-c8d30e5210c4?q=80&w=200&auto=format&fit=crop" class="h-12 w-12 md:h-16 md:w-16 rounded-full border-2 border-gold object-cover shadow-lg group-hover:scale-105 transition-transform duration-500 bg-white" />
+                <h1 class="font-kugile text-2xl md:text-3xl font-bold tracking-wider uppercase text-white group-hover:text-gold transition-colors duration-300 drop-shadow-sm">
+                    Red Lotus<br/><span class="text-sm md:text-base tracking-[0.2em] font-normal block">Bungalow</span>
+                </h1>
+            </div>
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#home" class="text-white text-[0.85rem] font-extra uppercase tracking-widest hover:text-gold transition-colors font-medium ">Home</a>
+                <a href="#vibe" class="text-white text-[0.85rem] font-extra uppercase tracking-widest hover:text-gold transition-colors font-medium ">Vibe</a>
+                <a href="#rooms" class="text-white text-[0.85rem] font-extra uppercase tracking-widest hover:text-gold transition-colors font-medium ">Rooms</a>
+                <a href="#gallery" class="text-white text-[0.85rem] font-extra uppercase tracking-widest hover:text-gold transition-colors font-medium ">Gallery</a>
+                <a href="#reviews" class="text-white text-[0.85rem] font-extra uppercase tracking-widest hover:text-gold transition-colors font-medium ">Reviews</a>
+                <a href="#contact" class="text-white text-[0.85rem] font-extra uppercase tracking-widest hover:text-gold transition-colors font-medium ">Contact</a>
+            </nav>
+            <a href="/templates/booking.html" target="_blank" class="bg-gradient-to-r from-lotusRed to-lotusDark text-white px-8 py-2.5 rounded-none font-bold text-sm hover:from-gold hover:to-goldDark hover:text-white transition-all transform hover:-translate-y-1 shadow-lg border border-gold/50 tracking-widest">
+                BOOK NOW
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1544984243-ec57ea16fe25?q=80&w=2574&auto=format&fit=crop" class="w-full h-full object-cover scale-105 animate-ken-burns"/>
+                <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/70"></div>
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            </div>
+            <div class="relative z-10 text-center px-4 w-full max-w-7xl mx-auto mt-16">
+                <span class="inline-block text-gold font-body tracking-[0.4em] text-sm md:text-base mb-6 uppercase border-b border-gold pb-2 animate-fade-in-up">
+                    Nuwara Eliya's Hidden Gem
+                </span>
+                <h1 class="font-kugile text-5xl md:text-7xl lg:text-8xl text-white font-normal mb-6 leading-tight drop-shadow-2xl">
+                    Red Lotus <br/> 
+                    <span class="italic text-transparent bg-clip-text bg-gradient-to-r from-white via-gold to-white font-kugile block mt-2 pb-2">
+                        Bungalow
+                    </span>
+                </h1>
+                <p class="text-white/90 text-lg md:text-xl font-body max-w-2xl mx-auto mb-10 leading-relaxed font-light tracking-wide">
+                    Where colonial elegance meets the misty mountains. <br/>The ultimate chill spot for the modern soul.
+                </p>
+                <div class="flex flex-col md:flex-row gap-5 justify-center">
+                    <a href="/templates/booking.html" target="_blank" class="bg-gold text-white px-10 py-4 rounded-none font-bold tracking-[0.2em] hover:bg-white hover:text-lotusRed transition-all flex items-center justify-center gap-2 shadow-glow border border-gold hover:border-white uppercase text-xs md:text-sm">
+                        Check Availability 
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7"/></svg>
+                    </a>
+                    <a href="#rooms" class="bg-white/5 backdrop-blur-md border border-gold/50 text-gold px-10 py-4 rounded-none font-bold tracking-[0.2em] hover:bg-gold hover:text-white transition-all shadow-lg uppercase text-xs md:text-sm flex items-center justify-center">
+                        View Rooms
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIBE SECTION -->
+        <section id="vibe" class="py-24 bg-white relative">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-16 items-center">
+                    <div class="relative">
+                        <div class="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-gold z-0"></div>
+                        <div class="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-lotusRed z-0"></div>
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2670&auto=format&fit=crop" class="relative z-10 shadow-2xl w-full h-[550px] object-cover hover:scale-[1.01] transition-transform duration-500 grayscale-[10%] hover:grayscale-0"/>
+                        <div class="absolute -bottom-8 -left-8 bg-richBlack p-8 shadow-2xl z-20 max-w-xs hidden md:block border-b-4 border-gold">
+                            <p class="font-kugile text-2xl text-gold italic">"Elegance is the only beauty that never fades."</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-lotusRed font-bold tracking-[0.3em] uppercase mb-4 text-xs flex items-center gap-2">
+                            <span class="w-8 h-[1px] bg-lotusRed"></span> The Experience
+                        </h2>
+                        <h3 class="font-kugile text-4xl md:text-5xl text-richBlack mb-8 leading-tight">
+                            Luxury in <span class="italic text-gold font-kugile">Mist.</span>
+                        </h3>
+                        <p class="text-gray-600 mb-8 leading-relaxed font-body text-base md:text-lg font-light">
+                            <span class="font-kugile text-lotusRed font-bold text-xl">Red Lotus Bungalow</span> offers a premium sanctuary in the heart of Nuwara Eliya. Surrounded by tea plantations and mist-covered mountains, our bungalow combines colonial charm with modern luxury. Perfect for those who seek exclusivity and comfort.
+                        </p>
+                        <ul class="space-y-6 mb-10">
+                            <li class="flex items-center gap-5 text-gray-800 font-medium group">
+                                <div class="bg-gold/10 p-3 rounded-full text-gold group-hover:bg-gold group-hover:text-white transition-colors"><i data-lucide="wifi" class="w-5 h-5"></i></div>
+                                <span class="group-hover:translate-x-2 transition-transform duration-300 font-body">High-Speed Fibre WiFi</span>
+                            </li>
+                            <li class="flex items-center gap-5 text-gray-800 font-medium group">
+                                <div class="bg-gold/10 p-3 rounded-full text-gold group-hover:bg-gold group-hover:text-white transition-colors"><i data-lucide="coffee" class="w-5 h-5"></i></div>
+                                <span class="group-hover:translate-x-2 transition-transform duration-300 font-body">Ceylon Tea & Coffee Lounge</span>
+                            </li>
+                            <li class="flex items-center gap-5 text-gray-800 font-medium group">
+                                <div class="bg-gold/10 p-3 rounded-full text-gold group-hover:bg-gold group-hover:text-white transition-colors"><i data-lucide="wind" class="w-5 h-5"></i></div>
+                                <span class="group-hover:translate-x-2 transition-transform duration-300 font-body">Panoramic Mountain Views</span>
+                            </li>
+                            <li class="flex items-center gap-5 text-gray-800 font-medium group">
+                                <div class="bg-gold/10 p-3 rounded-full text-gold group-hover:bg-gold group-hover:text-white transition-colors"><i data-lucide="star" class="w-5 h-5"></i></div>
+                                <span class="group-hover:translate-x-2 transition-transform duration-300 font-body">Premium 5-Star Service</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROOMS SECTION -->
+        <section id="rooms" class="py-24 bg-[#F8F8F8]">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-kugile text-4xl md:text-5xl text-richBlack mb-4">Your Sanctuary</h2>
+                    <div class="flex items-center justify-center gap-4">
+                        <div class="w-12 h-[1px] bg-gold"></div>
+                        <div class="text-lotusRed font-kugile text-xl">❦</div>
+                        <div class="w-12 h-[1px] bg-gold"></div>
+                    </div>
+                </div>
+
+                <!-- ROOM GRID -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- CARD 1: GARDEN SUITE -->
+                    <div class="room-card bg-white rounded-lg shadow-lg 
+                               hover:shadow-gold  
+                               border-2 border-transparent 
+                               transition-all duration-300 
+                               group overflow-hidden flex flex-col">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=2670" class="room-img w-full h-full object-cover transition-transform duration-700" alt="Garden Suite">
+                            <div class="absolute top-4 right-4 bg-white text-richBlack font-bold px-3 py-1 text-xs uppercase tracking-wider rounded-sm">
+                                LKR 15,000
+                            </div>
+                        </div>
+                        <div class="p-8 flex flex-col flex-grow">
+                            <h3 class="font-kugile text-2xl text-richBlack mb-2">Garden Suite</h3>
+                            <p class="text-gray-500 text-sm mb-4 flex-grow">Direct access to lotus pond garden. Luxury bedding and en-suite bath with a rain shower.</p>
+                            
+
+                            <button onclick="openRoomDetails('Garden Suite')" class="mt-auto w-full border border-gray text-black hover:bg-black hover:text-gold transition-colors py-3 uppercase text-xs font-bold tracking-[0.2em] flex items-center justify-center gap-2 group-hover:shadow-lg">
+                                View Details
+                            </button>
+                        </div>
+                        <div class="w-0.5 h-[4px] bg-gold mx-auto mt-6 group-hover:w-full transition-all duration-500 ease-in-out mb-1"></div>
+
+                    </div>
+
+
+                    <!-- CARD 2: ROYAL LOFT -->
+                    <div class="room-card bg-white rounded-lg shadow-lg hover:shadow-gold transition-all duration-300 group overflow-hidden flex flex-col">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1505693416388-b0346efee539?q=80&w=2670" class="room-img w-full h-full object-cover transition-transform duration-700" alt="Royal Loft">
+                            <div class="absolute top-4 right-4 bg-white text-richBlack font-bold px-3 py-1 text-xs uppercase tracking-wider rounded-sm">
+                                LKR 18,500
+                            </div>
+                        </div>
+                        <div class="p-8 flex flex-col flex-grow">
+                            <h3 class="font-kugile text-2xl text-richBlack mb-2">Royal Loft</h3>
+                            <p class="text-gray-500 text-sm mb-4 flex-grow">Elevated views of misty hills, private timber balcony, and a cozy fireplace for romantic evenings.</p>
+                            
+                            
+                            <button onclick="openRoomDetails('Royal Loft')" class="mt-auto w-full border border-gray text-black hover:bg-black hover:text-gold transition-colors py-3 uppercase text-xs font-bold tracking-[0.2em] flex items-center justify-center gap-2 group-hover:shadow-lg">
+                                View Details
+                            </button>
+                        </div>
+                        <div class="w-0.5 h-[4px] bg-gold mx-auto mt-6 group-hover:w-full transition-all duration-500 ease-in-out mb-1"></div>
+                    </div>
+
+                    <!-- CARD 3: GRAND VILLA -->
+                    <div class="room-card bg-white rounded-lg shadow-lg hover:shadow-gold transition-all duration-300 group overflow-hidden flex flex-col">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2670" class="room-img w-full h-full object-cover transition-transform duration-700" alt="Grand Villa">
+                            <div class="absolute top-4 right-4 bg-white text-richBlack font-bold px-3 py-1 text-xs uppercase tracking-wider rounded-sm">
+                                LKR 25,000
+                            </div>
+                        </div>
+                        <div class="p-8 flex flex-col flex-grow">
+                            <h3 class="font-kugile text-2xl text-richBlack mb-2">Grand Villa</h3>
+                            <p class="text-gray-500 text-sm mb-4 flex-grow">Spacious living area, two master bedrooms, private dining, and exclusive butler service.</p>
+                            
+                            <button onclick="openRoomDetails('Grand Villa')" class="mt-auto w-full border border-gray text-black hover:bg-black hover:text-gold transition-colors py-3 uppercase text-xs font-bold tracking-[0.2em] flex items-center justify-center gap-2 group-hover:shadow-lg">
+                                View Details
+                            </button>
+                        </div>
+                        <div class="w-0.5 h-[4px] bg-gold mx-auto mt-6 group-hover:w-full transition-all duration-500 ease-in-out mb-1"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY SECTION -->
+        <section id="gallery" class="py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                    <div>
+                        <h2 class="font-kugile text-4xl text-richBlack">Visual Journey</h2>
+                        <p class="text-gold mt-2 italic font-kugile text-xl">"Moments captured in time"</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[300px]">
+                    <div class="col-span-2 row-span-2 relative overflow-hidden group cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=2670" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" alt="Resort Pool" />
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                        <div class="absolute bottom-6 left-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <p class="font-kugile text-2xl italic">The Gardens</p>
+                        </div>
+                    </div>
+                    <div class="relative overflow-hidden group cursor-pointer border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?q=80&w=2670" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Nature" />
+                    </div>
+                    <div class="relative overflow-hidden group cursor-pointer border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1571896349842-68c894912000?q=80&w=2669" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Room Detail" />
+                    </div>
+                    <div class="col-span-2 relative overflow-hidden group cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2670" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Lifestyle" />
+                    </div>
+                    <div class="relative overflow-hidden group cursor-pointer border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?q=80&w=2669" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Relaxation" />
+                    </div>
+                    <div class="relative overflow-hidden group cursor-pointer border border-gray-100">
+                        <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=2670" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="High Tea" />
+                    </div>
+                     <div class="col-span-2 relative overflow-hidden group cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=2670" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Evening Ambiance" />
+                    </div>
+                </div>
+        </section>
+
+        <<!-- REVIEWS SECTION -->
+    <section id="reviews" class="py-24 bg-richBlack text-white relative overflow-hidden select-none">
+        <!-- Background Effects -->
+        <div class="absolute top-0 left-0 w-96 h-96 bg-lotusRed/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-gold/10 rounded-full blur-[120px]"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <!-- Section Header -->
+            <div class="text-center mb-12">
+                <div class="flex justify-center gap-2 mb-6 text-gold drop-shadow-lg">
+                    <i data-lucide="star" class="w-6 h-6 fill-current"></i>
+                    <i data-lucide="star" class="w-6 h-6 fill-current"></i>
+                    <i data-lucide="star" class="w-6 h-6 fill-current"></i>
+                    <i data-lucide="star" class="w-6 h-6 fill-current"></i>
+                </div>
+                <h2 class="font-kugile text-4xl md:text-5xl text-white mb-4">Guest Experiences</h2>
+                <div class="flex items-center justify-center gap-3 mt-4 bg-white/5 inline-flex px-6 py-2 rounded-full border border-white/10 backdrop-blur-md">
+                    <div class="p-1"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="w-5 h-5"/></div>
+                    <p class="text-gray-300 font-body uppercase tracking-widest text-xs">
+                        Rated <span class="text-white font-bold text-sm">4.0/5</span> on Google
+                    </p>
+                </div>
+            </div>
+
+            <!-- Slider Container -->
+            <div class="relative max-w-4xl mx-auto">
+                <div class="overflow-hidden cursor-grab active:cursor-grabbing rounded-sm slider-container" id="reviewSlider">
+                    
+                    <!-- The Track (Moves Slides) -->
+                    <div class="flex slider-track" id="reviewTrack" style="width: 100%; display: flex; transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);">
+                        <!-- Javascript will inject slides here -->
+                        <div id="slidesContainer"></div>
+                    </div>
+
+                    <!-- Navigation Arrows -->
+                    <button id="prevReview" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 bg-white/5 hover:bg-gold p-4 rounded-full text-white hover:text-richBlack transition-all border border-white/10 shadow-lg">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    </button>
+                    <button id="nextReview" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 bg-white/5 hover:bg-gold p-4 rounded-full text-white hover:text-richBlack transition-all border border-white/10 shadow-lg">
+                        <i data-lucide="chevron" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Navigation Dots -->
+                <div class="flex justify-center gap-3 mt-4" id="dotsContainer">
+                    <!-- Javascript will inject dots here -->
+                    <div id="dotsContainer"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOCATION SECTION -->
+        <section id="contact" class="py-0 relative h-[550px] md:h-[650px]">
+            <div class="absolute inset-0 z-0">
+                 <iframe src="https://maps.google.com/maps?q=6.973719448391148,80.77600885581874&t=k&z=17&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style=border:0 allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                <div class="absolute inset-0 pointer-events-none"></div>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-r from-richBlack/95 via-richBlack/50 to-transparent pointer-events-none md:w-2/3"></div>
+            <div class="relative z-10 container mx-auto px-6 h-full flex items-center">
+                <div class="bg-richBlack/80 backdrop-blur-md border border-gold/30 p-12 rounded-none max-w-md text-white shadow-2xl">
+                    <span class="text-gold text-xs uppercase tracking-[0.3em] mb-4 block">Visit Us</span>
+                    <h2 class="font-kugile text-4xl mb-6 text-white font-normal">Find Your Way</h2>
+                    <p class="mb-8 text-gray-300 leading-relaxed font-body font-light">
+                        Nestled in the lush greenery of Nuwara Eliya, the "Little England" of Sri Lanka. 
+                    </p>
+                    <div class="flex items-start gap-4 mb-4 text-gold group cursor-pointer">
+                        <i data-lucide="map-pin" class="shrink-0 mt-1" size={20}></i>
+                        <div>
+                            <p class="text-white text-sm font-kugile tracking-wide text-lg">Red Lotus Bungalow</p>
+                            <p class="text-gray-400 text-sm font-light">No 166/8, Lady Maccullums Drive,<br/>Nuwara Eliya 22200, Sri Lanka</p>
+                        </div>
+                    </div>
+                     <div class="flex items-center gap-4 mb-10 text-gold group cursor-pointer">
+                        <i data-lucide="phone" class="shrink-0" size={20}></i>
+                        <a href="tel:+94701982555" class="text-white text-sm tracking-widest font-light hover:text-gold transition-colors">+94 70 198 255</a>
+                    </div>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=6.973719448391148,80.77600885581874" target="_blank" rel="noopener noreferrer" class="bg-gold text-richBlack px-8 py-4 rounded-none font-bold hover:bg-white hover:text-lotusRed transition-all shadow-lg text-xs tracking-[0.2em] uppercase w-full block text-center border border-gold">
+                        Get Directions
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#0a0a0a] text-white pt-20 pb-10 border-t-2 border-gold">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 lg:col-span-2 flex flex-col items-start">
+                    <div class="mb-6 cursor-pointer group flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1552252873-c8d30e5210c4?q=80&w=200&auto=format&fit=crop" class="h-16 w-16 object-cover rounded-full border-2 border-gold opacity-90 group-hover:opacity-100 transition-all bg-white" />
+                        <h2 class="font-kugile text-3xl font-bold text-white"><span class="text-lotusRed">Red Lotus</span> <span class="font-light italic text-gold">Bungalow</span></h2>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed max-w-sm mb-6 text-sm font-light">
+                        A serene escape crafted for the modern soul. Experience the luxury of silence and the beauty of nature.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="https://www.facebook.com/redlotusnuwaraeliya/" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-gold hover:border-gold hover:text-richBlack hover:-translate-y-1 transition-all"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+                <div class="col-span-1 lg:col-span-2 flex flex-col items-start lg:items-end text-left lg:text-right">
+                    <h3 class="font-kugile text-xl text-gold mb-6 uppercase tracking-widest">Contact</h3>
+                    <div class="space-y-4">
+                        <div class="text-gray-400 text-sm hover:text-white transition-colors group cursor-pointer">
+                            <p class="font-bold text-white mb-1 uppercase tracking-wider text-xs">Address</p>
+                            <span class="font-light">No 166/8, Lady Maccullums Drive,<br/>Nuwara Eliya 22200, Sri Lanka</span>
+                        </div>
+                        <div class="text-gray-400 text-sm hover:text-white transition-colors group cursor-pointer">
+                            <p class="font-bold text-white mb-1 uppercase tracking-wider text-xs">Reservations</p>
+                            <a href="tel:+94701982555" class="font-kugile text-lg hover:text-gold transition-colors">+94 70 198 255</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-600 text-[10px] tracking-[0.2em] uppercase">© 2024 Red Lotus Bungalow.</p>
+                <p class="text-gray-600 text-[10px] tracking-[0.2em] uppercase flex items-center gap-1">Designed by <span class="text-gold font-bold">Imaginative 369</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/94786105117" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-gold hover:scale-110 transition-transform duration-300 group flex items-center gap-2 overflow-hidden border-2 border-white">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="w-6 h-6 invert brightness-0" />
+        <span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap font-bold text-sm text-shadow">Chat with Us</span>
+    </a>
+
+    <!-- Initialize Icons -->
+    <script>lucide.createIcons();</script>
+    <!-- Link to JS -->
+    <script src="/static/script.js"></script>
+</body>
+</html>

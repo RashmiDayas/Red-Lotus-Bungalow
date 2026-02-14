@@ -1,0 +1,56 @@
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #FAFAFA;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Modal Lock */
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* Navbar Styles */
+        .nav-scrolled {
+            background-color: rgba(250, 248, 248, 0.95) !important;
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            box-shadow: 0 4px 20px -2px rgba(212, 175, 55, 0.25);
+        }
+        
+        .nav-scrolled .text-white {
+            color: #1A1A1A !important;
+        }
+
+        .nav-scrolled .group-hover\:text-gold:hover {
+            color: #D4AF37 !important;
+        }
+
+        /* Review Slider */
+        .slider-container {
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            padding: 0 1rem;
+        }
+
+        /* Utilities */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Room Card Hover Effects */
+        .room-card:hover .room-img {
+            transform: scale(1.05);
+        }
